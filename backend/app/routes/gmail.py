@@ -1,6 +1,4 @@
-# backend/app/routes/gmail.py
-
-from flask import redirect, url_for, session
+from flask import redirect, url_for, session, jsonify, request
 from .. import app, oauth
 from ..services.gmail_service import fetch_emails, download_attachments
 
@@ -19,9 +17,17 @@ def authorized():
     session['google_token'] = (response['access_token'], '')
     return 'Logged in successfully!'
 
-@app.route('/fetch_emails')
-def fetch_and_download_emails():
+@app.route('/process-emails')
+def process_and_download_emails():
     messages = fetch_emails()
     for message in messages:
         download_attachments(message['id'])
-    return f"Fetched and downloaded attachments from {len(messages)} emails."
+    return f"Processed and downloaded attachments from {len(messages)} emails."
+
+@app.route('/list-emails', methods=['GET'])
+def list_emails():
+    emails = fetch_emails()
+    if emails:
+        return jsonify(emails), 200
+    else:
+        return jsonify({"error": "Failed to list emails"}), 500

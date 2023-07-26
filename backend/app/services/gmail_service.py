@@ -1,6 +1,12 @@
 from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 import base64
 from .. import oauth
+
+from .document_classifier import classify_document
+from .document_processing import extract_text_from_pdf
+
+
 
 def fetch_emails():
     # Build the Gmail API service
@@ -30,3 +36,26 @@ def download_attachments(message_id):
             # Save the file (you can specify a path or use the filename from the email)
             with open(part['filename'], 'wb') as f:
                 f.write(file_data)
+
+def fetch_recent_emails(max_results=10):
+    """Fetch the most recent emails."""
+    try:
+        # Build the Gmail API service
+        credentials = oauth.google.get_credentials()
+        service = build('gmail', 'v1', credentials=credentials)
+        
+        # List the most recent emails
+        results = service.users().messages().list(userId='me', maxResults=max_results).execute()
+        messages = results.get('messages', [])
+        
+        # Fetch details for each message
+        emails = []
+        for message in messages:
+            email_data = service.users().messages().get(userId='me', id=message['id']).execute()
+            emails.append(email_data)
+        
+        return emails
+
+    except HttpError as error:
+        print(f"An error occurred: {error}")
+        return None
