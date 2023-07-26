@@ -1,3 +1,6 @@
 *.pyc
 __pycache__/
 node_modules/
+
+# Configuration and sensitive information
+backend/config.py
