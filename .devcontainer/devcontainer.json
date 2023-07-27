@@ -1,0 +1,14 @@
+{
+  "name": "DocManager Environment",
+  "image": "conda/miniconda3",
+  "forwardPorts": [5000, 8888],
+  "settings": {
+    "python.pythonPath": "/opt/conda/envs/doc_manager_env/bin/python",
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "python.formatting.autopep8Path": "/opt/conda/envs/doc_manager_env/bin/autopep8",
+    "python.formatting.blackPath": "/opt/conda/envs/doc_manager_env/bin/black"
+  },
+  "postCreateCommand": "bash ./.devcontainer/setup.sh",
+  "extensions": ["ms-python.python"]
+}
