@@ -1,16 +1,12 @@
-import PyPDF2
-from io import BytesIO
+import pdfplumber
 
-def extract_text_from_pdf(pdf_content):
-    """
-    Extract text from a PDF content.
-    
-    :param pdf_content: Bytes content of the PDF.
-    :return: Extracted text as a string.
-    """
-    pdf_file = BytesIO(pdf_content)
-    reader = PyPDF2.PdfFileReader(pdf_file)
-    text = ""
-    for page_num in range(reader.numPages):
-        text += reader.getPage(page_num).extractText()
+def extract_text_from_pdf(pdf_path):
+    """Extract text from a PDF file."""
+    with pdfplumber.open(pdf_path) as pdf:
+        text = ''.join(page.extract_text() for page in pdf.pages)
     return text
+
+def combine_email_and_document_content(email, document_content):
+    """Combine email content with document content."""
+    combined_content = email['subject'] + " " + email['body'] + " " + document_content
+    return combined_content
