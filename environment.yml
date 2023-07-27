@@ -1,0 +1,16 @@
+name: doc_manager_env
+channels:
+  - defaults
+dependencies:
+  - python=3.9
+  - pip
+  - pip:
+    - Flask
+    - pymongo
+    - google-auth
+    - google-auth-oauthlib
+    - google-auth-httplib2
+    - google-api-python-client
+    - openai
+    - pdfplumber
+    # Add other pip packages here as needed
